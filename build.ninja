@@ -1,0 +1,11 @@
+rule hack
+  command = RUSTC_BOOTSTRAP=1 rustc $flags $in
+
+rule rustc
+  command = rustc $flags $in
+
+build libtls.rlib: hack tls.rs
+  flags = --crate-type=lib
+
+build main: rustc main.rs | libtls.rlib
+  flags = --extern tls=libtls.rlib
